@@ -39,8 +39,11 @@ export default function Application(props) {
         <nav className="sidebar__menu">
           <DayList
             days={days}
-            day={day}
-            setDay={setDay}
+            value={day}
+            // setDay={setDay} use onchange instead setDay passed to 
+            // Application > DayList > DayListItem
+            //use onChange isn't using onChange, but setting the name of our props to be same as those keywords
+            onChange={setDay}
           />
         </nav>
         <img

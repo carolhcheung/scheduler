@@ -62,13 +62,13 @@ storiesOf("DayList", module)
     backgrounds: [{ name: "dark", value: "#222f3e", default: true }],
   })
   .add("Monday", () => (
-    <DayList days={days} day={"Monday"} setDay={action("setDay")} />
+    <DayList days={days} day={"Monday"} onChange={action("setDay")} />
   ))
   .add("Tuesday", () => (
-    <DayList days={days} day={"Tuesday"} setDay={action("setDay")} />
+    <DayList days={days} day={"Tuesday"} onChange={action("setDay")} />
   ))
   .add("Wednesday", () => (
-    <DayList days={days} day={"Wednesday"} setDay={action("setDay")} />
+    <DayList days={days} day={"Wednesday"} onChange={action("setDay")} />
   ));
 
 const interviewer = {
@@ -98,10 +98,13 @@ storiesOf("InterviewerListItem", module)
   ))
   .add("Clickable", () => (
     <InterviewerListItem
-      id={interviewer.id}
+      // id={interviewer.id} since we refactor to setInterviewer(interviewer.id) no longer need this
       name={interviewer.name}
       avatar={interviewer.avatar}
-      setInterviewer={action("setInterviewer")}
+      // setInterviewer={action("setInterviewer")} refactor into line below
+      //An argument can be passed to a function in Storybook by wrapping it in 
+      //() after the name of the action like ln107
+      setInterviewer={() => action("setInterviewer")(interviewer.id)}
     />
   ));
 

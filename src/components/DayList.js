@@ -3,21 +3,21 @@ import DayListItem from "components/DayListItem";
 
 export default function DayList(props) {
   //destructure props
-  const {days, day, setDay} = props;
+  const { days, value, onChange } = props;
 
   //x different keys in the props obj
   return (
     <ul>{days.map(x => (
-    <DayListItem
-      key={x.id}
-      name={x.name}
-      spots={x.spots}
-      selected={x.name === day}
-    setDay={setDay}
-    />
-  ))}
-  </ul>
-);
+      <DayListItem
+        key={x.id}
+        name={x.name}
+        spots={x.spots}
+        selected={x.name === value}
+        setDay={onChange}
+      />
+    ))}
+    </ul>
+  );
 };
 
 //originally like this on ln8
