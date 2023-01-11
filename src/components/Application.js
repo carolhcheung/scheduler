@@ -5,6 +5,9 @@ import "components/Application.scss";
 import DayList from "components/DayList";
 import Appointment from "components/Appointment";
 
+//when import with curly braces object don't need default on the export function line
+import { getAppointmentsForDay } from "helpers/selectors";
+
 
 // const days = [
 //   {
@@ -24,44 +27,44 @@ import Appointment from "components/Appointment";
 //   },
 // ];
 
-const appointments = {
-  "1": {
-    id: 1,
-    time: "12pm",
-  },
-  "2": {
-    id: 2,
-    time: "1pm",
-    interview: {
-      student: "Lydia Miller-Jones",
-      interviewer: {
-        id: 3,
-        name: "Sylvia Palmer",
-        avatar: "https://i.imgur.com/LpaY82x.png",
-      }
-    }
-  },
-  "3": {
-    id: 3,
-    time: "2pm",
-  },
-  "4": {
-    id: 4,
-    time: "3pm",
-    interview: {
-      student: "Archie Andrews",
-      interviewer: {
-        id: 4,
-        name: "Cohana Roy",
-        avatar: "https://i.imgur.com/FK8V841.jpg",
-      }
-    }
-  },
-  "5": {
-    id: 5,
-    time: "4pm",
-  }
-};
+// const appointments = {
+//   "1": {
+//     id: 1,
+//     time: "12pm",
+//   },
+//   "2": {
+//     id: 2,
+//     time: "1pm",
+//     interview: {
+//       student: "Lydia Miller-Jones",
+//       interviewer: {
+//         id: 3,
+//         name: "Sylvia Palmer",
+//         avatar: "https://i.imgur.com/LpaY82x.png",
+//       }
+//     }
+//   },
+//   "3": {
+//     id: 3,
+//     time: "2pm",
+//   },
+//   "4": {
+//     id: 4,
+//     time: "3pm",
+//     interview: {
+//       student: "Archie Andrews",
+//       interviewer: {
+//         id: 4,
+//         name: "Cohana Roy",
+//         avatar: "https://i.imgur.com/FK8V841.jpg",
+//       }
+//     }
+//   },
+//   "5": {
+//     id: 5,
+//     time: "4pm",
+//   }
+// };
 
 export default function Application(props) {
   // const [day, setDay] = useState("Monday");
@@ -77,20 +80,32 @@ export default function Application(props) {
     // you may put the line below, but will have to remove/comment hardcoded appointments variable
     // appointments: {}
   });
-
   // console.log(day);
-const setDay = day => setState({...state, day});
-
-const setDays = days => setState({...state, days});
-
-
+  const setDay = day => setState({ ...state, day });
+  
+  // const setDays = days => setState(prev => ({...prev, days}));
+  //giving dailyAppointments an empty array to hold them
+  //now dailyAppointments is from getAppointments function from state object
+  const dailyAppointments = getAppointmentsForDay(state, state.day);
+  
+  //get api data
   useEffect(() => {
-    axios.get("http://localhost:8001/api/days")
-      .then(res => {
-        console.log(res.data)
-        setDays([...res.data]) //this passes in res.data into setDays
+    Promise.all([
+      axios.get("http://localhost:8001/api/days"),
+      axios.get("http://localhost:8001/api/appointments"),
+      axios.get("http://localhost:8001/api/interviewers")
+     ]).then((all) => {
+        // console.log(all[0].data);
+        const days = all[0].data;
+        // console.log(all[1].data);
+        const appointments = all[1].data;
+        console.log(appointments)
+        // console.log(all[1]);
+        // console.log(all[2]);
+        // setDays([...res.data]) //this passes in res.data into setDays
+      setState(prev => ({...prev, days, appointments}))
       })
-  })
+  }, []);
 
   return (
     <main className="layout">
@@ -118,12 +133,12 @@ const setDays = days => setState({...state, days});
         />
       </section>
       <section className="schedule">
-        {Object.values(appointments).map((appointment) => {
+        {dailyAppointments.map((appointment) => {
           return (
             <Appointment key={appointment.id} {...appointment} />
           )
         })}
-
+        <Appointment key="last" time="5pm" />
       </section>
     </main>
   );
