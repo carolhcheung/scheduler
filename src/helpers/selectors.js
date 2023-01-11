@@ -15,6 +15,39 @@ export function getAppointmentsForDay(state, day) {
   return selectedDay.appointments.map(appointment => state.appointments[appointment]);
 }
 
+// {  getInterview should return this
+//   "student": "Lydia Miller-Jones",
+//   "interviewer": {  
+//     "id": 1,
+//     "name": "Sylvia Palmer",
+//     "avatar": "https://i.imgur.com/LpaY82x.png"
+//   }
+// }
+
+
+export function getInterview(state, interview) {
+
+  if (!interview){
+    return null
+  }
+
+  const interviewerId = interview.interviewer
+  const interviewers = state.interviewers
+
+  for (const id in interviewers){
+    if (interviewerId === interviewers[id].id){
+
+      const interviewDetails = {
+        student: interview.student,
+        interviewer: interviewers[id]
+      }
+      
+      return interviewDetails
+    }
+  }
+
+}
+
 
 // export function getAppointmentsForDay(state, day) {
 //   //... returns an array of appointments for that day

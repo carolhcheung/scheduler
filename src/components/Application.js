@@ -6,7 +6,7 @@ import DayList from "components/DayList";
 import Appointment from "components/Appointment";
 
 //when import with curly braces object don't need default on the export function line
-import { getAppointmentsForDay } from "helpers/selectors";
+import { getAppointmentsForDay, getInterview } from "helpers/selectors";
 
 
 // const days = [
@@ -76,7 +76,8 @@ export default function Application(props) {
   const [state, setState] = useState({
     day: "Monday",
     days: [],
-    appointments: {}
+    appointments: {},
+    interviewers: {}
     // you may put the line below, but will have to remove/comment hardcoded appointments variable
     // appointments: {}
   });
@@ -88,6 +89,11 @@ export default function Application(props) {
   //now dailyAppointments is from getAppointments function from state object
   const dailyAppointments = getAppointmentsForDay(state, state.day);
   
+  //get schedule from appointments
+  const schedule = dailyAppointments.map((appointment) => {
+    const interview = getInterview(state, appointment.interview);
+  })
+
   //get api data
   useEffect(() => {
     Promise.all([
@@ -99,11 +105,11 @@ export default function Application(props) {
         const days = all[0].data;
         // console.log(all[1].data);
         const appointments = all[1].data;
-        console.log(appointments)
-        // console.log(all[1]);
-        // console.log(all[2]);
+        // console.log(appointments)
+        const interviewers = all[2].data;
+        // console.log(all[2].data);
         // setDays([...res.data]) //this passes in res.data into setDays
-      setState(prev => ({...prev, days, appointments}))
+      setState(prev => ({...prev, days, appointments, interviewers}))
       })
   }, []);
 
