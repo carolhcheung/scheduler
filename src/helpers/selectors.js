@@ -15,15 +15,6 @@ export function getAppointmentsForDay(state, day) {
   return selectedDay.appointments.map(appointment => state.appointments[appointment]);
 }
 
-// {  getInterview should return this
-//   "student": "Lydia Miller-Jones",
-//   "interviewer": {  
-//     "id": 1,
-//     "name": "Sylvia Palmer",
-//     "avatar": "https://i.imgur.com/LpaY82x.png"
-//   }
-// }
-
 
 export function getInterview(state, interview) {
 
