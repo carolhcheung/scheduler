@@ -1,10 +1,10 @@
 export function getAppointmentsForDay(state, day) {
- const result = [];
+  const result = [];
   //check if state.days is empty array
   if (!state.days.length) {
     return result;
   }
-// console.log('days', state.days)
+  // console.log('days', state.days)
   const selectedDay = state.days.find(stateDay => stateDay.name === day);
   //check if selected day is not found
   if (!selectedDay) {
@@ -18,27 +18,89 @@ export function getAppointmentsForDay(state, day) {
 
 export function getInterview(state, interview) {
 
-  if (!interview){
+  if (!interview) {
     return null
   }
 
   const interviewerId = interview.interviewer
   const interviewers = state.interviewers
 
-  for (const id in interviewers){
-    if (interviewerId === interviewers[id].id){
+  for (const id in interviewers) {
+    if (interviewerId === interviewers[id].id) {
 
       const interviewDetails = {
         student: interview.student,
         interviewer: interviewers[id]
       }
-      
+
       return interviewDetails
     }
   }
 
 }
 
+export function getInterviewersForDay(state, day) {
+  const result = [];
+  //check if state.days is empty array
+  if (!state.days.length) {
+    return result;
+  }
+  // console.log('days', state.days)
+  const selectedDay = state.days.find(stateDay => stateDay.name === day);
+  //check if selected day is not found
+  if (!selectedDay) {
+    return result;
+  }
+  //get interviewer ID for selectedDay
+  const interviewerIdForDay = selectedDay.interviewers;
+  //get interviewer info for all
+  const interviewers = state.interviewers;
+
+  //return array of interviewers[id] from each selectedDay.appointments = (interview info for select day)
+  console.log('forDay', interviewerIdForDay)
+  console.log('interviewer info', interviewers[2])
+  interviewerIdForDay.forEach(id => {
+    if (id === interviewers[id].id) {
+      result.push(interviewers[id])
+    }
+  })
+  return result;
+}
+
+ ///pseudo-code to look for interviewerId=state.appointments[appointment].interviewer; if interviewerId === state.interviewers[interviewerId] return state.interviewers[].name
+
+
+//  export function getInterviewersForDay(state, day) {
+//   //... returns an array of appointments for that day
+//   const result = [];
+//   console.log('State.Days:', state.days);
+//   // // if no interviewers in days data
+//   if (!state.days.length) {
+//     return result;
+//   }
+//   // filter through array for a specific day details
+//   const getDay = state.days.filter(x => x.name === day);
+
+//   // if no data/object for a specific day
+//   if (!getDay[0]) {
+//     return result;
+//   }
+
+//   // get the interviewers IDs for that day
+//   const interviewerIdsForDay = getDay[0].interviewers;
+
+//   // get details for all interviewers
+//   const interviewers = state.interviewers;
+
+//   // get interviewers details for the specific day if id matches
+//   interviewerIdsForDay.forEach(id => {
+//     if (id === interviewers[id].id) {
+//       result.push(interviewers[id]);
+//     }
+//   });
+
+//   return result;
+// }
 
 // export function getAppointmentsForDay(state, day) {
 //   //... returns an array of appointments for that day

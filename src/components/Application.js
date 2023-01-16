@@ -6,7 +6,7 @@ import DayList from "components/DayList";
 import Appointment from "components/Appointment";
 
 //when import with curly braces object don't need default on the export function line
-import { getAppointmentsForDay, getInterview } from "helpers/selectors";
+import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";
 
 
 
@@ -26,18 +26,11 @@ export default function Application(props) {
     // appointments: {}
   });
   // console.log(day);
+
+  //update day in state
   const setDay = day => setState({ ...state, day });
   
   // const setDays = days => setState(prev => ({...prev, days}));
-  //giving dailyAppointments an empty array to hold them
-  //now dailyAppointments is from getAppointments function from state object
-  const dailyAppointments = getAppointmentsForDay(state, state.day);
-  
-  //get schedule from appointments
-  const schedule = dailyAppointments.map((appointment) => {
-    const interview = getInterview(state, appointment.interview);
-  })
-  
   //get api data
   useEffect(() => {
     Promise.all([
@@ -56,6 +49,50 @@ export default function Application(props) {
         setState(prev => ({...prev, days, appointments, interviewers}))
       })
     }, []);
+  //giving dailyAppointments an empty array to hold them
+  //now dailyAppointments is from getAppointments function from state object
+  const dailyAppointments = getAppointmentsForDay(state, state.day);
+  
+  //get interviewer info for days
+  const dailyInterviewers = getInterviewersForDay(state, state.day);
+
+  const bookInterview = (id, interview) => {
+    // from FORM onSave, get intervier id + interview object { student: name, interviewer: id}
+    
+    // create new appointment object with interview details
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    }; 
+
+    // create new appointments object with appointment details
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+
+    // set the statement with new appointments object
+    setState({...state, appointments})
+
+  }
+// passingg all props/data for each appointment to the the component
+  //get schedule from appointments
+  const appointmentComponent = dailyAppointments.map((appointment) => {
+    const interview = getInterview(state, appointment.interview);
+    return (
+      // <Appointment key={appointment.id} {...appointment} />
+      <Appointment 
+      key={appointment.id} 
+      id={appointment.id}
+      time={appointment.time}
+      interview={interview}
+      interviewers={dailyInterviewers}
+      bookInterview={bookInterview}
+      />
+    );
+  })
+
+  
 
     return (
       <main className="layout">
@@ -83,12 +120,8 @@ export default function Application(props) {
         />
       </section>
       <section className="schedule">
-        {dailyAppointments.map((appointment) => {
-          return (
-            <Appointment key={appointment.id} {...appointment} />
-          )
-        })}
-        <Appointment key="last" time="5pm" />
+        { appointmentComponent }
+        <Appointment key="last" time="5pm" bookInterview={bookInterview} />
       </section>
     </main>
   );
