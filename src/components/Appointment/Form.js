@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import InterviewerList from "../InterviewerList";
 import Button from "../Button";
 
-import { action } from "@storybook/addon-actions";
+// import { action } from "@storybook/addon-actions";
 
 //allows student to create appointment with interviewer
 export default function Form(props) {

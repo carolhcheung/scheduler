@@ -34,9 +34,9 @@ export default function Application(props) {
   //get api data
   useEffect(() => {
     Promise.all([
-      axios.get("http://localhost:8001/api/days"),
-      axios.get("http://localhost:8001/api/appointments"),
-      axios.get("http://localhost:8001/api/interviewers")
+      axios.get("/api/days"),
+      axios.get("/api/appointments"),
+      axios.get("/api/interviewers")
     ]).then((all) => {
         // console.log(all[0].data);
         const days = all[0].data;
@@ -57,24 +57,34 @@ export default function Application(props) {
   const dailyInterviewers = getInterviewersForDay(state, state.day);
 
   const bookInterview = (id, interview) => {
-    // from FORM onSave, get intervier id + interview object { student: name, interviewer: id}
+    // from form component onSave, get sppointment id + interview object { student: name, interviewer: id}
+
+    // update the database for this appointment id
+    return axios.put(`/api/appointments/${id}`, { interview }).then((response) => {
+      
+      console.log("Response Status: ", response.status);
+
+      // create new appointment object with interview details
+      const appointment = {
+        ...state.appointments[id],
+        interview: { ...interview },
+      };
+
+      // create new appointments object with appointment details
+      const appointments = {
+        ...state.appointments,
+        [id]: appointment,
+      };
+
+      // set the state with new appointments object
+      setState({ ...state, appointments });
+    })
+    .catch(err => {
+      console.log(err)
+    });
     
-    // create new appointment object with interview details
-    const appointment = {
-      ...state.appointments[id],
-      interview: { ...interview }
-    }; 
+  };
 
-    // create new appointments object with appointment details
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
-
-    // set the statement with new appointments object
-    setState({...state, appointments})
-
-  }
 // passingg all props/data for each appointment to the the component
   //get schedule from appointments
   const appointmentComponent = dailyAppointments.map((appointment) => {
