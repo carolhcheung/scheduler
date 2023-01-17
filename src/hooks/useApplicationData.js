@@ -46,23 +46,17 @@ export default function useApplicationData(initial) {
   const updateSpots = (state, addSpot = false) => {
     //current day = state.day
     //find day in days array matching select day to update
-    const selectedDay = state.days.filter((day) => day.name === state.day)[0];
+    const dayObj = state.days.find((d) => d.name === state.day);
+    //calculate spots here
+    const spots = addSpot ? dayObj.spots + 1 : dayObj.spots - 1
 
-    if (addSpot) {
-      // add spot if an interview is being cancelled
-      selectedDay.spots++;
-    } else {
-      // remove a spot if an interview is being booked
-      selectedDay.spots--;
-    }
+
+
+    const day = { ...dayObj, spots }
+
+
     // create a new days Array and replace the day with selectedDay
-    const days = state.days.map((day) => {
-      if (day.name === state.day) {
-        return selectedDay;
-      } else {
-        return day;
-      }
-    });
+    const days = state.days.map(d => d.name === state.day ? day : d);
 
     return days;
   }; 
