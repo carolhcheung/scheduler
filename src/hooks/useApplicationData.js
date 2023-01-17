@@ -42,6 +42,30 @@ export default function useApplicationData(initial) {
       setState(prev => ({ ...prev, days, appointments, interviewers }))
     })
   }, []);
+  //updateSpots when an interview is added/removed, add default is false unless we state it to true in cancelInterview
+  const updateSpots = (state, addSpot = false) => {
+    //current day = state.day
+    //find day in days array matching select day to update
+    const selectedDay = state.days.filter((day) => day.name === state.day)[0];
+
+    if (addSpot) {
+      // add spot if an interview is being cancelled
+      selectedDay.spots++;
+    } else {
+      // remove a spot if an interview is being booked
+      selectedDay.spots--;
+    }
+    // create a new days Array and replace the day with selectedDay
+    const days = state.days.map((day) => {
+      if (day.name === state.day) {
+        return selectedDay;
+      } else {
+        return day;
+      }
+    });
+
+    return days;
+  }; 
 
   //book a new interview or PUT update interview
   const bookInterview = (id, interview) => {
@@ -66,14 +90,14 @@ export default function useApplicationData(initial) {
           ...state.appointments,
           [id]: appointment,
         };
-
+        //updateSpots(state, not true because want to decrement a spot when interview is booked )
+        const days = updateSpots(state)
         // set the state with new appointments object
-        setState({ ...state, appointments });
+        setState({ ...state, appointments, days });
         // })
         // .catch(err => {
         //   console.log(err)
       });
-
   };
 
   //cancel interview function, sets interview state to the state after it's been deleted from db
@@ -93,8 +117,10 @@ export default function useApplicationData(initial) {
           ...state.appointments,
           [id]: appointment,
         };
+        //update state.days with updated number of spots left, true because need to increment and addSpot after interview is cancelled
+        const days = updateSpots(state, true)
         // set the state with new appointments object
-        setState({ ...state, appointments });
+        setState({ ...state, appointments, days });
         console.log('Delete complete')
       });
     // .catch(err => {
