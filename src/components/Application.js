@@ -6,7 +6,7 @@ import DayList from "components/DayList";
 import Appointment from "components/Appointment";
 
 //when import with curly braces object don't need default on the export function line
-import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";
+import { getAppointmentsForDay, getInterview, getInterviewersForDay, } from "helpers/selectors";
 
 
 
@@ -57,10 +57,13 @@ export default function Application(props) {
   const dailyInterviewers = getInterviewersForDay(state, state.day);
 
   const bookInterview = (id, interview) => {
+
     // from form component onSave, get sppointment id + interview object { student: name, interviewer: id}
 
     // update the database for this appointment id
-    return axios.put(`/api/appointments/${id}`, { interview }).then((response) => {
+    return axios
+      .put(`/api/appointments/${id}`, { interview })
+      .then((response) => {
       
       console.log("Response Status: ", response.status);
 
@@ -78,12 +81,41 @@ export default function Application(props) {
 
       // set the state with new appointments object
       setState({ ...state, appointments });
-    })
-    .catch(err => {
-      console.log(err)
+    // })
+    // .catch(err => {
+    //   console.log(err)
     });
     
   };
+
+  //cancel interview function, sets interview state to the state after it's been deleted from db
+  const cancelInterview = (id) => {
+    return axios
+      .delete(`/api/appointments/${id}`)
+      .then((response) => {
+        console.log("Response Status: ", response.status);
+        // set appointment object with interview deleted
+        const appointment = {
+          ...state.appointments[id],
+          interview: null,
+        };
+
+        // create new appointments object with appointment details
+        const appointments = {
+          ...state.appointments,
+          [id]: appointment,
+        };
+        // set the state with new appointments object
+        setState({ ...state, appointments });
+        console.log('Delete complete')
+      });
+    // .catch(err => {
+    //   console.log(err)
+    // });
+  };
+
+
+
 
 // passingg all props/data for each appointment to the the component
   //get schedule from appointments
@@ -98,6 +130,7 @@ export default function Application(props) {
       interview={interview}
       interviewers={dailyInterviewers}
       bookInterview={bookInterview}
+      cancelInterview={cancelInterview}
       />
     );
   })
