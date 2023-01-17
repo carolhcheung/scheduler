@@ -18,7 +18,7 @@ export default function useApplicationData(initial) {
     // you may put the line below, but will have to remove/comment hardcoded appointments variable
     // appointments: {}
   });
-  // console.log(day);
+
 
   //update day in state, select day
   const setDay = day => setState({ ...state, day });
@@ -31,35 +31,37 @@ export default function useApplicationData(initial) {
       axios.get("/api/appointments"),
       axios.get("/api/interviewers")
     ]).then((all) => {
-      // console.log(all[0].data);
+
       const days = all[0].data;
-      // console.log(all[1].data);
+
       const appointments = all[1].data;
-      // console.log(appointments)
+
       const interviewers = all[2].data;
-      // console.log(all[2].data);
-      // setDays([...res.data]) //this passes in res.data into setDays
+
       setState(prev => ({ ...prev, days, appointments, interviewers }))
     })
   }, []);
-  //updateSpots when an interview is added/removed, add default is false unless we state it to true in cancelInterview
-  const updateSpots = (state, addSpot = false) => {
-    //current day = state.day
-    //find day in days array matching select day to update
-    const dayObj = state.days.find((d) => d.name === state.day);
-    //calculate spots here
-    const spots = addSpot ? dayObj.spots + 1 : dayObj.spots - 1
 
+  //update spots when interview is added/removed
+  const updateSpots = (state, appointments) => {
+    // Get the day
+    const dayObj = state.days.find((d) => d.name === state.day);
+
+    // count the null appointments
+    let spots = 0
+    for (const id of dayObj.appointments) {
+      const appointment = appointments[id]
+      if (!appointment.interview) {
+        spots++
+      }
+    }
 
 
     const day = { ...dayObj, spots }
+    const days = state.days.map(d => d.name === state.day ? day : d)
 
-
-    // create a new days Array and replace the day with selectedDay
-    const days = state.days.map(d => d.name === state.day ? day : d);
-
-    return days;
-  }; 
+    return days
+  }
 
   //book a new interview or PUT update interview
   const bookInterview = (id, interview) => {
@@ -84,14 +86,13 @@ export default function useApplicationData(initial) {
           ...state.appointments,
           [id]: appointment,
         };
-        //updateSpots(state, not true because want to decrement a spot when interview is booked )
-        const days = updateSpots(state)
+//updateSpots(state, not true because want to decrement a spot when interview is booked )
+        const days = updateSpots(state, appointments)
         // set the state with new appointments object
         setState({ ...state, appointments, days });
-        // })
-        // .catch(err => {
-        //   console.log(err)
+
       });
+
   };
 
   //cancel interview function, sets interview state to the state after it's been deleted from db
@@ -111,15 +112,13 @@ export default function useApplicationData(initial) {
           ...state.appointments,
           [id]: appointment,
         };
-        //update state.days with updated number of spots left, true because need to increment and addSpot after interview is cancelled
-        const days = updateSpots(state, true)
+
+        const days = updateSpots(state, appointments)
         // set the state with new appointments object
         setState({ ...state, appointments, days });
         console.log('Delete complete')
       });
-    // .catch(err => {
-    //   console.log(err)
-    // });
+
   };
 
   //return from all helper functions in hook
