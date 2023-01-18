@@ -56,7 +56,6 @@ export default function useApplicationData(initial) {
       }
     }
 
-
     const day = { ...dayObj, spots }
     const days = state.days.map(d => d.name === state.day ? day : d)
 
@@ -78,7 +77,7 @@ export default function useApplicationData(initial) {
         // create new appointment object with interview details
         const appointment = {
           ...state.appointments[id],
-          interview: { ...interview },
+          interview: { ...interview }
         };
 
         // create new appointments object with appointment details

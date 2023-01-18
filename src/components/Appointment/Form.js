@@ -27,9 +27,9 @@ export default function Form(props) {
   }
 
   //to save student and interviewer from input field and interviewer selected and shows states in hooks>actions of form in devtools
-  const save = () => {
-    props.onSave(student, interviewer);
-  };
+  // const save = () => {
+  //   props.onSave(student, interviewer);
+  // };
 
   //validate form
 
@@ -42,6 +42,7 @@ export default function Form(props) {
       setError("Please select an interviewer");
       return;
     }
+    setError("");
     props.onSave(student, interviewer);
   }
 
