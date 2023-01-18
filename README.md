@@ -1,6 +1,11 @@
 # Interview Scheduler
 Simple interview management application to setup, edit, delete interview appointments.
 
+!["home"](https://github.com/carolhcheung/scheduler/blob/master/docs/home.PNG?raw=true)
+!["error handling"](https://github.com/carolhcheung/scheduler/blob/master/docs/error_handling.PNG?raw=true)
+!["delete"](https://github.com/carolhcheung/scheduler/blob/master/docs/delete.PNG?raw=true)
+
+
 ## Setup
 
 Install dependencies with `npm install`.
