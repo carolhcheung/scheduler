@@ -1,6 +1,6 @@
 import React from "react";
 
-import { render, cleanup } from "@testing-library/react";
+import { render, cleanup, fireEvent } from "@testing-library/react";
 
 import Form from "components/Appointment/Form";
 
@@ -28,10 +28,13 @@ describe("Form", () => {
 
   it("validates that the student name is not blank", () => {
     /* 1. Create the mock onSave function */
-
+    const onSave = jest.fn();
     /* 2. Render the Form with interviewers and the onSave mock function passed as an onSave prop, the student prop should be blank or undefined */
-    const { }
+    const { getByText } = render(
+      <Form interviewers={interviewers} onSave={onSave} />)
+
     /* 3. Click the save button */
+    fireEvent.click(getByText("Save"));
 
     expect(getByText(/student name cannot be blank/i)).toBeInTheDocument();
     expect(onSave).not.toHaveBeenCalled();
@@ -39,10 +42,11 @@ describe("Form", () => {
 
   it("validates that the interviewer cannot be null", () => {
     /* 1. Create the mock onSave function */
-
+    const onSave = jest.fn();
     /* 2. Render the Form with interviewers and the onSave mock function passed as an onSave prop, the interviewer prop should be null */
-
+    const { getByText } = render(<Form interviewers={interviewers} student="Lydia Miller-Jones" onSave={onSave} />)
     /* 3. Click the save button */
+    fireEvent.click(getByText("Save"));
 
     expect(getByText(/please select an interviewer/i)).toBeInTheDocument();
     expect(onSave).not.toHaveBeenCalled();
@@ -50,13 +54,18 @@ describe("Form", () => {
 
   it("calls onSave function when the name and interviewer is defined", () => {
     /* 1. Create the mock onSave function */
-
+    const onSave = jest.fn();
     /* 2. Render the Form with interviewers, name and the onSave mock function passed as an onSave prop */
-
+    // getByText() will throw an error if the text isn't found in the document, whereas queryByText() will return null and let you continue with your testing 
+    const { queryByText, getByText } = render(<Form interviewers={interviewers} interviewer={1} student="Lydia Miller-Jones" onSave={onSave} />)
     /* 3. Click the save button */
+    fireEvent.click(getByText("Save"));
 
     expect(queryByText(/student name cannot be blank/i)).toBeNull();
     expect(queryByText(/please select an interviewer/i)).toBeNull();
+
+    //toHaveBeenCalledTimes to check number of times mock fn has been called single argument (number)
+    //toHaveBeenCalledWith check mock fn number of times with specific arguments(more than one argument)
     expect(onSave).toHaveBeenCalledTimes(1);
     expect(onSave).toHaveBeenCalledWith("Lydia Miller-Jones", 1);
   });

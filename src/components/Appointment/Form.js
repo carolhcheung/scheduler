@@ -10,6 +10,9 @@ export default function Form(props) {
   //destructured and set initial value
   const [student, setStudent] = useState(props.student || "");
   const [interviewer, setInterviewer] = useState(props.interviewer || null);
+  //error state to Form component
+  const [error, setError] = useState("");
+
 
   //clear function to clear all fields
   const reset = () => {
@@ -26,7 +29,21 @@ export default function Form(props) {
   //to save student and interviewer from input field and interviewer selected and shows states in hooks>actions of form in devtools
   const save = () => {
     props.onSave(student, interviewer);
-  }; 
+  };
+
+  //validate form
+
+  const validate = () => {
+    if (student === "") {
+      setError("Student name cannot be blank");
+      return;
+    }
+    if (interviewer === null) {
+      setError("Please select an interviewer");
+      return;
+    }
+    props.onSave(student, interviewer);
+  }
 
 
   return (
@@ -40,20 +57,20 @@ export default function Form(props) {
             placeholder="Enter Student Name"
             value={student}
             onChange={(e) => setStudent(e.target.value)}
-
+            data-testid="student-name-input"
           />
+          <section className="appointment__validation">{error}</section>
         </form>
         <InterviewerList
           interviewers={props.interviewers}
           value={interviewer}
           onChange={setInterviewer}
-          data-testid="student-name-input"
         />
       </section>
       <section className="appointment__card-right">
         <section className="appointment__actions">
           <Button danger onClick={cancel}>Cancel</Button>
-          <Button confirm onClick={save}>Save</Button>
+          <Button confirm onClick={validate}>Save</Button>
         </section>
       </section>
     </main>
