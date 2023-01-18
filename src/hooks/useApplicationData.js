@@ -96,21 +96,22 @@ export default function useApplicationData(initial) {
 
   //cancel interview function, sets interview state to the state after it's been deleted from db
   const cancelInterview = (id) => {
+    const appointment = {
+      ...state.appointments[id],
+      interview: null,
+    };
+
+    // create new appointments object with appointment details
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment,
+    };
+    
     return axios
       .delete(`/api/appointments/${id}`)
       .then((response) => {
         console.log("Response Status: ", response.status);
         // set appointment object with interview deleted
-        const appointment = {
-          ...state.appointments[id],
-          interview: null,
-        };
-
-        // create new appointments object with appointment details
-        const appointments = {
-          ...state.appointments,
-          [id]: appointment,
-        };
 
         const days = updateSpots(state, appointments)
         // set the state with new appointments object
