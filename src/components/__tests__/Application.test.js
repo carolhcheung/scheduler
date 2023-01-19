@@ -87,7 +87,7 @@ it("loads data, cancels an interview and increases the spots remaining for Monda
   // 3. Click the "Delete" button on the booked appointment.
   const appointment = getAllByTestId(container, "appointment").find(
     appointment => queryByText(appointment, "Archie Cohen")
-    );
+  );
 
   fireEvent.click(queryByAltText(appointment, "Delete"));
   // 4. Check that the confirmation message is shown.
@@ -101,8 +101,8 @@ it("loads data, cancels an interview and increases the spots remaining for Monda
   // 8. Check that the DayListItem with the text "Monday" also has the text "2 spots remaining".
   const day = getAllByTestId(container, "day").find(day =>
     queryByText(day, "Monday")
-    );
-    expect(getByText(day, "2 spots remaining")).toBeInTheDocument();
+  );
+  expect(getByText(day, "2 spots remaining")).toBeInTheDocument();
 });
 
 //edit interview
@@ -114,14 +114,15 @@ it("loads data, edits an interview and keeps the spots remaining for Monday the 
   //We want to start by finding an existing interview.
   const appointment = getAllByTestId(container, "appointment").find(
     appointment => queryByText(appointment, "Archie Cohen")
-    );
+  );
   //With the existing interview we want to find the edit button.
   fireEvent.click(queryByAltText(appointment, "Edit"));
   //We change the name and save the interview.
-  fireEvent.change(getByTestId(appointment, "student-name-input"), {
+  fireEvent.change(getByPlaceholderText(appointment, /enter student name/i), {
     target: { value: "Carol C" }
+
   });
-  
+
   fireEvent.click(getByText(appointment, "Save"));
 
   expect(getByText(appointment, "Saving")).toBeInTheDocument();
@@ -132,9 +133,7 @@ it("loads data, edits an interview and keeps the spots remaining for Monday the 
     queryByText(day, "Monday")
   );
   //Read the errors because sometimes they say that await cannot be outside of an async function.
-  await waitForElement(() =>
-      expect(getByText(day, "1 spot remaining")).toBeInTheDocument()
-    );
+  expect(getByText(day, "1 spot remaining")).toBeInTheDocument()
 
 });
 
@@ -171,7 +170,7 @@ it("shows the save error when failing to save an appointment", async () => {
 
 
 //error handling for delete
-it.only("shows the save error when failing to save an appointment", async () => {
+it("shows the save error when failing to save an appointment", async () => {
   //mock axios error
   axios.delete.mockRejectedValueOnce();
   // 1. Render the Application.
@@ -190,7 +189,7 @@ it.only("shows the save error when failing to save an appointment", async () => 
   // 5. Click the "Confirm" button on the confirmation.
   fireEvent.click(queryByText(appointment, "Confirm"));
   // 6. Check that the element with the text "Deleting" is displayed.
-  expect(ByText(appointment, "Deleting")).toBeInTheDocument();
+  expect(getByText(appointment, "Deleting")).toBeInTheDocument();
   //Wait until the element with the text "Unable to delete" from appointment index.js is displayed. Error rendered
   await waitForElement(() => getByText(appointment, "Unable to delete"));
   expect(getByText(appointment, "Error")).toBeInTheDocument();

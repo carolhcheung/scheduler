@@ -1,10 +1,6 @@
 # Interview Scheduler
 Simple interview management application to setup, edit, delete interview appointments.
-
 !["home"](https://github.com/carolhcheung/scheduler/blob/master/docs/home.PNG?raw=true)
-!["error handling"](https://github.com/carolhcheung/scheduler/blob/master/docs/error_handling.PNG?raw=true)
-!["delete"](https://github.com/carolhcheung/scheduler/blob/master/docs/delete.PNG?raw=true)
-
 
 ## Setup
 
@@ -27,3 +23,13 @@ npm test
 ```sh
 npm run storybook
 ```
+## Project Stack
+*Front-End: React, Axios, JSX, HTML, SASS, JavaScript
+*Back-End: Express, Node.js, PostgreSQL
+*Testing: Storybook, Webpack Dev Server, Jest, Testing Library and Cypress
+
+### Error handling with book a new interview
+!["error handling"](https://github.com/carolhcheung/scheduler/blob/master/docs/error_handling.PNG?raw=true)
+
+### Delete an interview
+!["delete"](https://github.com/carolhcheung/scheduler/blob/master/docs/delete.PNG?raw=true)
