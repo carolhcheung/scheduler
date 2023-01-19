@@ -1,4 +1,5 @@
 # Interview Scheduler
+
 Simple interview management application to setup, edit, delete interview appointments.
 !["home"](https://github.com/carolhcheung/scheduler/blob/master/docs/home.PNG?raw=true)
 
