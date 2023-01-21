@@ -96,7 +96,7 @@ export default function Appointment(props) {
         <Confirm
           message="Please confirm if you wish to delete your appointment."
           onConfirm={destroy}
-          onCancel={() => back()}
+          onCancel={back}
         />
       )}
       {mode === EDIT && (
@@ -109,10 +109,10 @@ export default function Appointment(props) {
         />
       )}
       {mode === ERROR_SAVE && (
-        <Error message="Unable to save" onClose={() => back()} />
+        <Error message="Unable to save" onClose={back} />
       )}
       {mode === ERROR_DELETE && (
-        <Error message="Unable to delete" onClose={() => back()} />
+        <Error message="Unable to delete" onClose={() => transition(SHOW)} />
       )}
     </article>
 

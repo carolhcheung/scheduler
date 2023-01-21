@@ -34,3 +34,12 @@ npm run storybook
 
 ### Delete an interview
 !["delete"](https://github.com/carolhcheung/scheduler/blob/master/docs/delete.PNG?raw=true)
+
+
+## To run the app locally
+1.Fork this repository, and clone your fork.
+2.Go to the scheduler-api repository that contains the database and also fork and clone from repository.
+3.Install dependencies in both folders (scheduler & scheduler-api) using the npm install command.
+4.Open separate terminals, one for scheduler and one for scheduler-api.
+5.Run the both servers using the npm start command.
+6.Go to http://localhost:8000/ in your browser.
